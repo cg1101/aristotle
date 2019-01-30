@@ -16,41 +16,32 @@ export class AuthService {
   refreshingToken: BehaviorSubject<boolean> = new BehaviorSubject(false);
   shouldLogin: Subject<void> = new Subject();
 
-  constructor(
-    @Inject(LocalStorage) protected localStorage,
-    protected api: ApiService
-  ) {
+  constructor(protected api: ApiService, @Inject(LocalStorage) protected localStorage) {
     console.log('AuthService.constructor()');
-    this.token = this.localStorage.getItem('tokenKey');
-    // setTimeout(() => {
-      // this.refreshToken();
-    // }, 0);
+    this.token = localStorage.getItem(tokenKey);
   }
 
   refreshToken() {
     this.refreshingToken.next(true);
-    this.api
-      .whoAmI()
-      .pipe(
-        tap(
-          resp => {
-            this.token = resp.token;
-          },
-          error => {
-            console.warn(`error caught inside tap: ${error}`);
-            return of({ token: 'faketoken' });
-          }
-        ),
-        catchError(error => {
-          console.error(`error validating session: ${error}`, error);
-          this.token = null;
-          return throwError(error);
-        }),
-        finalize(() => {
-          this.refreshingToken.next(false);
-        })
-      )
-      .subscribe();
+    this.api.whoAmI().pipe(
+      tap(
+        resp => {
+          this.token = (resp || {}).token;
+        },
+        error => {
+          console.warn(`error caught inside tap: ${error}`);
+          return of({ token: 'faketoken' });
+        }
+      ),
+      catchError(error => {
+        console.error(`error validating session: ${error}`, error);
+        this.token = null;
+        return throwError(error);
+      }),
+      finalize(() => {
+        this.refreshingToken.next(false);
+      })
+    ).subscribe();
   }
 
   login() {
