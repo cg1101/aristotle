@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiRoot: 'https://6j0qcep16f.execute-api.ap-southeast-2.amazonaws.com/stage',
+  // loginUrl:
+  // 'https://superheros.auth.ap-southeast-2.amazoncognito.com/login' +
+  // '?response_type=token&client_id=6krlht3mucl0oab4jlirli7p37&redirect_uri=http://localhost:8080'
+  loginUrl:
+    'https://bareena.auth.ap-southeast-2.amazoncognito.com/login' +
+    '?response_type=token&client_id=6iivqebame3losg2nsbchje6lp&redirect_uri=http://localhost:4200'
 };
 
 /*

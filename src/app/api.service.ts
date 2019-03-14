@@ -12,18 +12,20 @@ export class ApiService {
   }
 
   whoAmI(): Observable<any> {
-    return of(null).pipe(
-      switchMap(() => {
-        return this.http.get('/whoami').pipe(
-          switchMap(a => of(a)),
-          catchError(error => {
-            if (error.status === 404) {
-              error.status = 401;
-              return throwError(error);
-            }
-          })
-        );
-      }),
-    );
+    // return of(null).pipe(
+    //   switchMap(() => {
+        // return this.http.get('/whoami').pipe(
+        //   switchMap(a => of(a)),
+          // catchError(error => {
+          //   console.log('error caught inside ApiService.whoAmI()');
+          //   if (error.status === 404) {
+          //     error.status = 401;
+          //     return throwError(error);
+          //   }
+          // })
+        // );
+      // }),
+    // );
+    return this.http.get('/whoami');
   }
 }

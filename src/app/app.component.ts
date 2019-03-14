@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 import { WindowRef } from './window-ref';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-
-const url =
-  'https://superheros.auth.ap-southeast-2.amazoncognito.com/login' +
-  '?response_type=token&client_id=6krlht3mucl0oab4jlirli7p37&redirect_uri=http://localhost:8080';
+import { environment } from '../environments/environment';
 
 function decodeFragment(input = ''): Object {
   const rs = {};
+  input = input || '';
   input.replace(/\+/g, ' ').split(/&/).forEach(kv => {
     const i = kv.indexOf('=');
     if (i > 0) {
@@ -39,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    console.log('environment is', environment);
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
@@ -50,11 +49,13 @@ export class AppComponent implements OnInit, OnDestroy {
         console.log('first NavigationEnd', event);
         console.log('fragment is', fragment);
         console.log('rs', rs);
+        this.auth.refreshToken();
       });
-    this.auth.refreshToken();
-    this.auth.shouldLogin.pipe(takeUntil(this.ngDestroy$)).subscribe(() => {
+    this.auth.shouldLogin.pipe(
+      takeUntil(this.ngDestroy$)
+    ).subscribe(() => {
       console.log('show login page');
-      this.win.nativeWindow.location.href = url;
+      this.win.nativeWindow.location.href = environment.loginUrl;
     });
   }
 
