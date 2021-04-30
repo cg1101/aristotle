@@ -1,0 +1,9 @@
+# https://docs.github.com/en/code-security/supply-chain-security/enabling-and-disabling-version-updates#enabling-github-dependabot-version-updates
+# https://github.blog/2020-06-01-keep-all-your-packages-up-to-date-with-dependabot/
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
